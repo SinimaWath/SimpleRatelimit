@@ -57,8 +57,8 @@ type RatelimitData struct {
 
 type Ratelimit struct {
 	rateLimitData       *RatelimitData
-	queues              map[ID]Queue // очередь времени, когда освобождает еще одно место для нового запроса, для каждого id
-	currentRequestCount map[ID]int   // количество текущих запросов, для каждого id
+	queues              map[ID]*Queue // очередь времени, когда освобождает еще одно место для нового запроса, для каждого id
+	currentRequestCount map[ID]int    // количество текущих запросов, для каждого id
 }
 
 // Check - проверяет может ли пользователь получить доступ к участку кода
@@ -77,14 +77,14 @@ func (r *Ratelimit) Check(req Request) bool {
 	if !queueExist {
 		newQueue := NewQueue()
 		newQueue.Push(req.time + r.rateLimitData.timeLimit)
-		r.queues[req.id] = newQueue
+		r.queues[req.id] = &newQueue
 	} else {
 		queue.Push(req.time + r.rateLimitData.timeLimit)
 		top, isEmpty := queue.Top()
-
 		for top < req.time && !isEmpty {
 			currentRequestCount--
-			top, isEmpty = queue.Pop()
+			queue.Pop()
+			top, isEmpty = queue.Top()
 		}
 	}
 

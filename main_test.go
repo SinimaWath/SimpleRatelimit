@@ -23,7 +23,7 @@ func TestSimpleCase(t *testing.T) {
 						0: struct{}{},
 					},
 				},
-				queues:              make(map[ID]Queue),
+				queues:              make(map[ID]*Queue),
 				currentRequestCount: make(map[ID]int),
 			},
 			requests: []Request{
@@ -37,7 +37,7 @@ func TestSimpleCase(t *testing.T) {
 				},
 				Request{
 					id:   0,
-					time: 4,
+					time: 5,
 				},
 				Request{
 					id:   1,
@@ -59,7 +59,7 @@ func TestSimpleCase(t *testing.T) {
 					0: []int{
 						noError,
 						noError,
-						error429,
+						noError,
 					},
 					1: []int{
 						noError,
@@ -78,7 +78,7 @@ func TestSimpleCase(t *testing.T) {
 						1: struct{}{},
 					},
 				},
-				queues:              make(map[ID]Queue),
+				queues:              make(map[ID]*Queue),
 				currentRequestCount: make(map[ID]int),
 			},
 			requests: []Request{
