@@ -5,10 +5,6 @@ import (
 	"testing"
 )
 
-type RateLimitTestCase struct {
-	ratelimit Ratelimit
-}
-
 type TestCase struct {
 	requests       []Request
 	response       Response

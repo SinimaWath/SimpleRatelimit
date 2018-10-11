@@ -5,7 +5,7 @@ const (
 	noError  = 0
 )
 
-// ID -
+// ID - идентификатор пользователя
 type ID int
 
 // Queue - самописная тупая очередь
@@ -41,7 +41,7 @@ func NewQueue() Queue {
 }
 
 type Request struct {
-	id   ID  // уникальный номер запроса пользователя
+	id   ID  // идентификатор пользователя
 	time int // время запроса
 }
 
@@ -61,6 +61,7 @@ type Ratelimit struct {
 	currentRequestCount map[ID]int   // количество текущих запросов, для каждого id
 }
 
+// Check - проверяет может ли пользователь получить доступ к участку кода
 func (r *Ratelimit) Check(req Request) bool {
 	if _, inIdsList := r.rateLimitData.ids[req.id]; !inIdsList {
 		return true
@@ -68,10 +69,9 @@ func (r *Ratelimit) Check(req Request) bool {
 
 	currentRequestCount, countExist := r.currentRequestCount[req.id]
 	if !countExist {
-		currentRequestCount = 1
-	} else {
-		currentRequestCount++
+		currentRequestCount = 0
 	}
+	currentRequestCount++
 
 	queue, queueExist := r.queues[req.id]
 	if !queueExist {
